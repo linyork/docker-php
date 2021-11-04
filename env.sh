@@ -53,8 +53,10 @@ do
             clear
             # 讀取所有 Folder
             rawFolderList=($(ls | grep -v ".sh" | grep -v ".md"))
+            # tag name
+            tagName=$( echo ${rawFolderList[${number}]} | sed 's/Dockerfile-//g' | sed 's/.dockerfile//g')
             # 建立 Image
-            docker build -t  tinayork/${rawFolderList[${number}]} ./${rawFolderList[${number}]}
+            docker build . -f ./${rawFolderList[${number}]} -t tinayork/php:${tagName}
             echo "----------------------------------------"
             ;;
         r) # 刪除所有 Image
