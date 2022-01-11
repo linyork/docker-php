@@ -29,8 +29,8 @@ do
     echo "l.\t顯示所有 Image"
     echo "d.\t顯示所有 Dockerfile"
     echo "b.\t建立 Image"
-    echo "r.\t刪除所有 Image"
-    echo "p.\t推 Image"
+    echo "r.\t刪除 Image"
+    echo "p.\t推送 Image"
     echo "q.\t離開"
     read -p "指令:" input
 
@@ -57,11 +57,20 @@ do
             tagName=$( echo ${rawFolderList[${number}]} | sed 's/Dockerfile-//g' | sed 's/.dockerfile//g')
             # 建立 Image
             docker build . -f ./${rawFolderList[${number}]} -t tinayork/php:${tagName}
+            echo "\033[0;32m已經建立 tinayork/${tagName} 的 Image 在本地端\033[0m"
             echo "----------------------------------------"
             ;;
-        r) # 刪除所有 Image
+        r) # remove Image
             clear
-            docker rmi -f $(docker images)
+            echo "----------------------------------------"
+            docker images
+            echo "----------------------------------------"
+            read -p "輸入要刪除的 IMAGE ID:" id
+            clear
+            # 刪除 Image
+            echo ${id}
+            docker rmi ${id}
+            echo "----------------------------------------"
             ;;
         p) # push image
             clear
@@ -72,8 +81,11 @@ do
             clear
             # 讀取所有 Folder
             rawFolderList=($(ls | grep -v ".sh" | grep -v ".md"))
+            # tag name
+            tagName=$( echo ${rawFolderList[${number}]} | sed 's/Dockerfile-//g' | sed 's/.dockerfile//g')
             # 推 Image 至 docker hub
-            docker push tinayork/${rawFolderList[${number}]}
+            docker push tinayork/${tagName}
+            echo "\033[0;32m已經推送 tinayork/${tagName} 的 Image 在 tinayork 的 dockerhub\033[0m"
             echo "----------------------------------------"
             ;;
         *) # 離開程序

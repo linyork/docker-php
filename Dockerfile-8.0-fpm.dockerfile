@@ -20,6 +20,9 @@ RUN apt-get update \
     && apt-get install -y libzip-dev zip \
     && docker-php-ext-configure zip \
     && docker-php-ext-install zip \
+    # git
+    && apt-get install -y git \
+    # clean
     && apt-get clean
 
 # composer
